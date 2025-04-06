@@ -81,7 +81,7 @@ public class EmpDeptSalgradeTests
     {
         var emps = Database.GetEmps();
 
-        var result = emps.GroupBy(e => e.DeptNo).Select(e => new {DeptNo = e.Key, Count = e.Count()}); 
+        var result = emps.GroupBy(e => e.DeptNo).Select(e => new {DeptNo = e.Key, Count = e.Count()}).ToList(); 
         
         Assert.Contains(result, g => g.DeptNo == 30 && g.Count == 2);
     }
@@ -93,7 +93,7 @@ public class EmpDeptSalgradeTests
     {
         var emps = Database.GetEmps();
 
-        var result = emps.Where(e => e.Comm != null).Select(e => new {e.EName, e.Comm}); 
+        var result = emps.Where(e => e.Comm != null).Select(e => new {e.EName, e.Comm}).ToList(); 
         
         Assert.All(result, r => Assert.NotNull(r.Comm));
     }
@@ -112,7 +112,7 @@ public class EmpDeptSalgradeTests
             {
                 x.emp.EName,
                 x.salgrade.Grade
-            });
+            }).ToList();
         Assert.Contains(result, r => r.EName == "ALLEN" && r.Grade == 3);
     }
 
@@ -128,7 +128,7 @@ public class EmpDeptSalgradeTests
                 {
                     DeptNo = e.Key,
                     AvgSal = e.Average(emp => emp.Sal)
-                }); 
+                }).ToList(); 
         
         Assert.Contains(result, r => r.DeptNo == 30 && r.AvgSal > 1000);
     }
@@ -142,7 +142,7 @@ public class EmpDeptSalgradeTests
 
         var result = emps.Where(
             emp => emp.Sal > emps.Where(emp2 => emp2.DeptNo == emp.DeptNo).Average(emp2 => emp2.Sal)
-        ).Select(emp => emp.EName); 
+        ).Select(emp => emp.EName).ToList(); 
         
         Assert.Contains("ALLEN", result);
     }

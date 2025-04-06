@@ -46,7 +46,7 @@ public class AdvancedEmpDeptTests
     {
         var emps = Database.GetEmps();
 
-        var jobs = emps.Select(emp => emp.Job).Distinct(); 
+        var jobs = emps.Select(emp => emp.Job).Distinct().ToList(); 
         
         Assert.Contains("PRESIDENT", jobs);
         Assert.Contains("SALESMAN", jobs);
@@ -95,7 +95,11 @@ public class AdvancedEmpDeptTests
     {
         var emps = Database.GetEmps();
 
-        var result = emps.Join(emps, e1 => e1.Mgr, e2 => e2.EmpNo, (emp1, emp2) => new {Employee = emp1.EName, Manager = emp2.EName});
+        var result = emps.Join(emps, 
+            e1 => e1.Mgr, 
+            e2 => e2.EmpNo, 
+            (emp1, emp2) => new {Employee = emp1.EName, Manager = emp2.EName}
+        ).ToList();
         
         Assert.Contains(result, r => r.Employee == "SMITH" && r.Manager == "FORD");
     }
@@ -107,7 +111,7 @@ public class AdvancedEmpDeptTests
     {
         var emps = Database.GetEmps();
 
-        var result = emps.Select(emp => new {emp.EName, Total = emp.Sal + emp.Comm}); 
+        var result = emps.Select(emp => new {emp.EName, Total = emp.Sal + emp.Comm}).ToList(); 
         
         Assert.Contains(result, r => r.EName == "ALLEN" && r.Total == 1900);
     }
@@ -136,7 +140,7 @@ public class AdvancedEmpDeptTests
                     x.emp.EName,
                     x.dept.DName,
                     x.sal.Grade
-                }); 
+                }).ToList(); 
         
         Assert.Contains(result, r => r.EName == "ALLEN" && r.DName == "SALES" && r.Grade == 3);
     }
